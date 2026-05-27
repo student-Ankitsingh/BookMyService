@@ -1,6 +1,10 @@
 import React, { useState } from 'react'
+import axios from "axios"
+import { useNavigate } from "react-router-dom"
 
 const Signup = () => {
+
+ const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -17,10 +21,29 @@ const Signup = () => {
   };
 
   //handle submit
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log(formData)
+  try {
+    const response = await axios.post(
+      "http://localhost:5000/api/auth/signup",
+      formData
+    );
+
+   // save token
+   localStorage.setItem(
+    "token",
+    response.data.token
+   );
+
+   console.log(response.data);
+
+   // redirect
+   navigate("/");
+
+  } catch (error) {
+    console.log(error.response.data)
+  }
   };
   return (
     <div>
